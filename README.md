@@ -71,6 +71,9 @@ Training and prediction CSV files must contain a `path` column. For training/eva
 - `data/synthetic_unwanted_files_v3.csv` (for batch predictions)
 
 Example format:
+Training and prediction CSV files must contain a `path` column. For training/evaluation, include a `label` column. A `size` column (bytes) is optional but recommended.
+
+Example:
 
 ```csv
 path,size,label
