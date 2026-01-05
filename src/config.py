@@ -18,12 +18,15 @@ class ProjectPaths:
         self.artifacts_dir = self.root / "artifacts"
         self.reports_dir = self.root / "reports"
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.artifacts_dir = self.root / "artifacts"
+        self.reports_dir = self.root / "reports"
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
         self.reports_dir.mkdir(parents=True, exist_ok=True)
 
     def ensure_dirs(self, extra: Iterable[Path] | None = None) -> None:
         """Ensure that common directories plus any provided extras exist."""
         for path in [self.data_dir, self.artifacts_dir, self.reports_dir, *(extra or [])]:
+        for path in [self.artifacts_dir, self.reports_dir, *(extra or [])]:
             path.mkdir(parents=True, exist_ok=True)
 
 
