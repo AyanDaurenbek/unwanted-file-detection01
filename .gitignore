@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+*.joblib
+.venv/
+.env
+affinity.dat
