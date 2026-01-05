@@ -1,0 +1,11 @@
+path,path_length,depth,num_parts,num_hidden,has_hidden,name_length,extension,extension_length,is_tmp,suspicious_score,size,probability,prediction,dangerous_flag
+C:\Users\Public\Documents\desktop.ini,37,4,5,0,0,11,ini,3,0,0,278,0.685,1,0
+C:\Users\Public\Documents\Steam\RUNE\1771300\achievements.ini,61,7,8,0,0,16,ini,3,0,0,32,0.72,1,0
+C:\Users\Public\Documents\Steam\RUNE\1771300\leaderboards.ini,61,7,8,0,0,16,ini,3,0,0,32,0.69,1,0
+C:\Users\Public\Documents\The Witcher\bagna.adv,47,5,6,0,0,9,adv,3,0,0,57061732,0.695,1,0
+C:\Users\Public\Documents\The Witcher\m1_module.adv,51,5,6,0,0,13,adv,3,0,0,184981162,0.72,1,1
+C:\Users\Public\Documents\The Witcher\m2_module.adv,51,5,6,0,0,13,adv,3,0,0,20663805,0.695,1,0
+C:\Users\Public\Documents\The Witcher\podstepy.adv,50,5,6,0,0,12,adv,3,0,0,7808244,0.705,1,0
+C:\Users\Public\Documents\The Witcher\upiory.adv,48,5,6,0,0,10,adv,3,0,0,97226358,0.755,1,0
+C:\Users\Public\Documents\The Witcher\wesele.adv,48,5,6,0,0,10,adv,3,0,0,76067069,0.695,1,0
+C:\Users\Public\Documents\The Witcher\wiedzminkolaj.adv,55,5,6,0,0,17,adv,3,0,0,229323033,0.72,1,1

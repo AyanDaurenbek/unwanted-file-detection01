@@ -29,6 +29,16 @@ class TrainedModel:
         joblib.dump(self, path)
 
 
+def to_2d_array(x):
+    """
+    Helper for sklearn FunctionTransformer: converts Series/array-like to 2D numpy array.
+    Must be defined at module top-level to be picklable by joblib.
+    """
+    arr = np.asarray(x)
+    if arr.ndim == 1:
+        arr = arr.reshape(-1, 1)
+    return arr
+
 def load_trained_model(path: str) -> TrainedModel:
     """Load a persisted :class:`TrainedModel` from disk."""
     return joblib.load(path)
@@ -47,11 +57,48 @@ NUMERIC_FEATURES = [
     "size",
 ]
 
+def select_path_column(df):
+    # Возвращаем Series с путями (1D). TfidfVectorizer это ожидает.
+    return df["path"]
+
+def select_numeric_columns(df):
+    # Возвращаем DataFrame с числовыми признаками
+    return df[NUMERIC_FEATURES]
+
+
+# def _build_preprocessor() -> ColumnTransformer:
+#     text_pipeline = Pipeline(
+#         steps=[
+#             ("selector", FunctionTransformer(lambda df: df["path"], validate=False)),
+#             (
+#                 "tfidf",
+#                 TfidfVectorizer(
+#                     analyzer="char_wb",
+#                     ngram_range=(3, 5),
+#                     min_df=2,
+#                     max_features=20000,
+#                 ),
+#             ),
+#         ]
+#     )
+#     numeric_pipeline = Pipeline(
+#         steps=[
+#             ("selector", FunctionTransformer(lambda df: df[NUMERIC_FEATURES], validate=False)),
+#             ("imputer", SimpleImputer(strategy="median")),
+#             ("scaler", StandardScaler()),
+#         ]
+#     )
+#     return ColumnTransformer(
+#         transformers=[
+#             ("text", text_pipeline, ["path"]),
+#             ("num", numeric_pipeline, NUMERIC_FEATURES),
+#         ]
+#     )
 
 def _build_preprocessor() -> ColumnTransformer:
     text_pipeline = Pipeline(
         steps=[
-            ("selector", FunctionTransformer(lambda df: df["path"], validate=False)),
+            ("selector", FunctionTransformer(select_path_column, validate=False)),
             (
                 "tfidf",
                 TfidfVectorizer(
@@ -63,13 +110,15 @@ def _build_preprocessor() -> ColumnTransformer:
             ),
         ]
     )
+
     numeric_pipeline = Pipeline(
         steps=[
-            ("selector", FunctionTransformer(lambda df: df[NUMERIC_FEATURES], validate=False)),
+            ("selector", FunctionTransformer(select_numeric_columns, validate=False)),
             ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
         ]
     )
+
     return ColumnTransformer(
         transformers=[
             ("text", text_pipeline, ["path"]),

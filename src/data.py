@@ -26,22 +26,20 @@ def map_binary_labels(
     positive_labels: Iterable = DEFAULT_POSITIVE,
     negative_labels: Iterable = DEFAULT_NEGATIVE,
 ) -> pd.Series:
-    """Map assorted label representations to a clean binary format of 0/1.
+    """
+    Binary label mapping for unwanted file detection.
 
-    Any value contained in *positive_labels* is mapped to 1, any value in
-    *negative_labels* is mapped to 0. Values not found in either set raise
-    a ValueError to guard against silent mislabeling.
+    Rule:
+    - benign -> 0 (normal)
+    - any other label -> 1 (unwanted)
+
+    Parameters positive_labels and negative_labels are kept
+    for backward compatibility but are not used.
     """
 
-    pos_set = {str(v).lower() for v in positive_labels}
-    neg_set = {str(v).lower() for v in negative_labels}
-
     def _map(value: object) -> int:
-        normalized = str(value).lower()
-        if normalized in pos_set:
-            return 1
-        if normalized in neg_set:
-            return 0
-        raise ValueError(f"Label {value!r} not recognized as positive or negative")
+        normalized = str(value).strip().lower()
+        return 0 if normalized == "benign" else 1
 
     return pd.Series([_map(v) for v in labels], name="label")
+
