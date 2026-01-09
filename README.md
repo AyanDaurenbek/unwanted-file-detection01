@@ -2,6 +2,42 @@
 
 A reference project for training and applying a machine-learning model to flag potentially unwanted files based on their paths and metadata. The CLI supports training, evaluation, scanning filesystem trees, and predicting labels for CSV inputs.
 
+## Quickstart
+
+1. Create and activate a virtual environment, then install dependencies:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Train on the provided synthetic split and write the tuned model to `artifacts/`:
+
+```bash
+python -m src.cli train data/synthetic_unwanted_files_v3_train.csv --test-size 0.2 --model-out artifacts/unwanted_model.joblib
+```
+
+3. Evaluate the saved model on the validation or test split to refresh metrics and plots in `reports/`:
+
+```bash
+python -m src.cli evaluate-model artifacts/unwanted_model.joblib data/synthetic_unwanted_files_v3_val.csv
+# or
+python -m src.cli evaluate-model artifacts/unwanted_model.joblib data/synthetic_unwanted_files_v3_test.csv
+```
+
+4. Generate predictions for a batch CSV (for example, the combined synthetic set) and store them under `reports/`:
+
+```bash
+python -m src.cli predict artifacts/unwanted_model.joblib data/synthetic_unwanted_files_v3.csv --output reports/predict.csv
+```
+
+5. Scan a directory safely using the trained model:
+
+```bash
+python -m src.cli scan artifacts/unwanted_model.joblib /path/to/scan --max-files 1000 --output reports/scan.csv
+```
+
 ## Installation
 
 ```bash
@@ -27,6 +63,14 @@ pip install -r requirements.txt
 
 ## Datasets
 
+Training and prediction CSV files must contain a `path` column. For training/evaluation, include a `label` column. A `size` column (bytes) is optional but recommended. Place your files under the `data/` directory. Example names already supported in the commands below:
+
+- `data/synthetic_unwanted_files_v3_train.csv`
+- `data/synthetic_unwanted_files_v3_val.csv`
+- `data/synthetic_unwanted_files_v3_test.csv`
+- `data/synthetic_unwanted_files_v3.csv` (for batch predictions)
+
+Example format:
 Training and prediction CSV files must contain a `path` column. For training/evaluation, include a `label` column. A `size` column (bytes) is optional but recommended.
 
 Example:
@@ -44,6 +88,10 @@ Run all commands via `python -m src.cli <command>` (or `python -m cli` if the pa
 ### Train models
 
 ```bash
+# With the provided synthetic splits
+python -m src.cli train data/synthetic_unwanted_files_v3_train.csv --test-size 0.2 --model-out artifacts/unwanted_model.joblib
+
+# Or with your own CSV
 python -m src.cli train data/training.csv --test-size 0.2 --model-out artifacts/unwanted_model.joblib
 ```
 
@@ -57,6 +105,10 @@ Artifacts: metrics CSV and plots are written to `reports/`.
 ### Evaluate an existing model
 
 ```bash
+# Using the provided validation or test split
+python -m src.cli evaluate-model artifacts/unwanted_model.joblib data/synthetic_unwanted_files_v3_val.csv
+
+# Against your own holdout CSV
 python -m src.cli evaluate-model artifacts/unwanted_model.joblib data/holdout.csv
 ```
 
@@ -76,6 +128,10 @@ Safeguards:
 ### Predict from CSV
 
 ```bash
+# Batch predictions on the synthetic prediction set
+python -m src.cli predict artifacts/unwanted_model.joblib data/synthetic_unwanted_files_v3.csv --output reports/predict.csv
+
+# Or with your own CSV
 python -m src.cli predict artifacts/unwanted_model.joblib data/predict.csv --output reports/predict.csv
 ```
 

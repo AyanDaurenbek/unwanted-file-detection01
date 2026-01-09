@@ -9,10 +9,15 @@ from typing import Iterable
 @dataclass
 class ProjectPaths:
     root: Path = field(default_factory=lambda: Path(__file__).resolve().parents[1])
+    data_dir: Path = field(init=False)
     artifacts_dir: Path = field(init=False)
     reports_dir: Path = field(init=False)
 
     def __post_init__(self) -> None:
+        self.data_dir = self.root / "data"
+        self.artifacts_dir = self.root / "artifacts"
+        self.reports_dir = self.root / "reports"
+        self.data_dir.mkdir(parents=True, exist_ok=True)
         self.artifacts_dir = self.root / "artifacts"
         self.reports_dir = self.root / "reports"
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
@@ -20,6 +25,7 @@ class ProjectPaths:
 
     def ensure_dirs(self, extra: Iterable[Path] | None = None) -> None:
         """Ensure that common directories plus any provided extras exist."""
+        for path in [self.data_dir, self.artifacts_dir, self.reports_dir, *(extra or [])]:
         for path in [self.artifacts_dir, self.reports_dir, *(extra or [])]:
             path.mkdir(parents=True, exist_ok=True)
 
